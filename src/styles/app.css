@@ -1,0 +1,14 @@
+li {
+  list-style: none
+}
+.map-container {
+  height: 100vh;
+}
+.login-wrap {
+  display: inline-block;
+  position: relative;
+  top: 100px;
+}
+.app-container {
+  text-align: center;
+}

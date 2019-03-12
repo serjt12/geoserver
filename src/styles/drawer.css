@@ -1,0 +1,36 @@
+.drawer-container {
+  position: absolute;
+  z-index: 401;
+  right: 56px;
+}
+div .ant-drawer-content-wrapper {
+  width: 25vw !important;
+}
+
+/* WithoutProjects */
+
+.box {
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  box-shadow: 0 1px 2px 0 rgba(34,36,38,.15), 0 0 0 1px rgba(34,36,38,.15);
+  flex-direction: column;
+  margin-top: 15px;
+}
+strong {
+  cursor: pointer;
+}
+.ant-btn-primary {
+  margin-top: 8px;
+}
+
+
+/* WithProjects */
+.close {
+  color: red;
+  float: right;
+}
+.ant-select-selection-selected-value .close {
+  display: none
+}
