@@ -12,7 +12,7 @@ const RenderProjectSites = ({projects: {projectSites}, dispatch, auth: {token}, 
     <li key={site._id}>
       <Radio>{site.name}</Radio>
       <Popconfirm
-        title="Are you sure delete this site?"
+        title={`Are you sure delete ${site.name}?`}
         onConfirm={() => handleDeleteSite(site._id)}
         onCancel={() => message.error('Canceled site operation')}
         okText="Yes"
@@ -31,7 +31,6 @@ const Option = Select.Option
 const Dragger = Upload.Dragger
 const TabPane = Tabs.TabPane
 const RenderWithProjects = (props) => {
-  console.log(props)
   const [showSites, setShowSites] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [showLayers, setShowLayers] = useState(false)
@@ -39,9 +38,11 @@ const RenderWithProjects = (props) => {
   const [showSpatial, setShowSpatial] = useState(false)
   const [projectID, setProjectID] = useState(props.projects.userProjects[props.projects.userProjects.length - 1]._id)
   const [defaultProject, setDefaultProject] = useState(props.projects.userProjects[props.projects.userProjects.length - 1].name)
+  const [showDescription, setShowDescription] = useState(false)
   const getFieldDecorator = props.form.getFieldDecorator
   const sitesBtnDisabled = props.form.getFieldValue('siteName')
   const {userProjects} = props.projects
+  const description = props.projects.userProjects.filter(project =>  project._id === projectID)[0] !== undefined ? props.projects.userProjects.filter(project =>  project._id === projectID)[0].description : ''
   const uploadConfig = {
     name: 'file',
     multiple: true,
@@ -130,6 +131,9 @@ const RenderWithProjects = (props) => {
   const callbackSpatial = (key) => {
     console.log(key);
   }
+  const handleDescription = () => {
+    setShowDescription(!showDescription)
+  }
   return (
     <Fragment>
       <div className="box">
@@ -153,6 +157,12 @@ const RenderWithProjects = (props) => {
             .reverse()}
         </Select>
         <Button onClick={handleShowModal} type="primary">New</Button>
+        {
+          description === '' ? null : <p className="description-title" onClick={handleDescription}>Project Description</p>
+        }
+        {
+          showDescription ? <p className="description-content">{description}</p> : null
+        }
         <ModalForm
           onCancel={handleCancel}
           visible={showModal}

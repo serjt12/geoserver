@@ -2,12 +2,13 @@ import { all, put, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 import actionTypes, {showModal} from './actions'
 import { loginSuccess } from './actions/auth'
+import {baseURL} from '../.env.development'
 import { userProjectsSuccess, deleteProjectSuccess, addProjectSuccess, projectSitesSuccess, addSiteSuccess, deleteSiteSuccess } from './actions/projects'
 
-
+// const baseURL = "http://181.143.87.202:5550"
 function* loginRequestSaga({user}) {
   try {
-    const res = yield axios.post('http://181.143.87.202:5550/users/login', {
+    const res = yield axios.post( baseURL + '/users/login', {
       email: user.Email,
       password: user.password,
     })
@@ -30,7 +31,7 @@ function* loginRequestSaga({user}) {
 
 function* alreadyLoginRequest({savedToken}) {
   try {
-    const res = yield axios('http://181.143.87.202:5550/users/', {
+    const res = yield axios( baseURL + '/users/', {
       headers: {
         Authorization: 'Bearer ' + savedToken,
       }
@@ -47,7 +48,7 @@ function* alreadyLoginRequest({savedToken}) {
 
 export function* requestUserProjects({token}) {
   try {
-    const res = yield axios('http://181.143.87.202:5550/projects/', {
+    const res = yield axios( baseURL + '/projects/', {
       headers: {
         Authorization: 'Bearer ' + token,
       }
@@ -61,7 +62,7 @@ export function* requestUserProjects({token}) {
 
 export function* requestAddProject({project, user_id, token}) {
   try {
-    const res = yield axios.post('http://181.143.87.202:5550/users/' + user_id + '/projects', {
+    const res = yield axios.post( baseURL + '/users/' + user_id + '/projects', {
       name: project.name,
       description: project.description,
     },
@@ -79,7 +80,7 @@ export function* requestAddProject({project, user_id, token}) {
 
 export function* requestDeleteProject({token, projectId}) {
   try {
-    const res = yield axios.delete('http://181.143.87.202:5550/projects/' + projectId, {
+    const res = yield axios.delete( baseURL + '/projects/' + projectId, {
       headers: {
         Authorization: 'Bearer ' + token,
       }
@@ -93,7 +94,7 @@ export function* requestDeleteProject({token, projectId}) {
 
 export function* requestProjectSites({token}) {
   try {
-    const res = yield axios('http://181.143.87.202:5550/sites/', {
+    const res = yield axios( baseURL + '/sites/', {
       headers: {
         Authorization: 'Bearer ' + token,
       }
@@ -107,7 +108,7 @@ export function* requestProjectSites({token}) {
 
 export function* requestAddSite({site, projectID, token}) {
   try {
-    const res = yield axios.post('http://181.143.87.202:5550/projects/' + projectID + '/sites/', { name: site.siteName, project_id: projectID },
+    const res = yield axios.post( baseURL + '/projects/' + projectID + '/sites/', { name: site.siteName, project_id: projectID },
       {
         headers: {
           Authorization: 'Bearer ' + token,
@@ -122,7 +123,7 @@ export function* requestAddSite({site, projectID, token}) {
 
 export function* requestDeleteSite({siteId, token}) {
   try {
-    const res = yield axios.delete('http://181.143.87.202:5550/sites/' + siteId,
+    const res = yield axios.delete( baseURL + '/sites/' + siteId,
       {
         headers: {
           Authorization: 'Bearer ' + token,
