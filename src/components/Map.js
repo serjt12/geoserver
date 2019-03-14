@@ -89,6 +89,14 @@ export default class MapComponent extends Component {
              <TileLayer url="http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"/>
            </BaseLayer>
         </LayersControl>
+          <TileLayer
+            tms={true}
+            opacity={1.0}
+            attribution=""
+            maxZoom={30}
+            minZoom={15}
+            url="http://181.143.87.202:5560/tiles/{z}/{x}/{y}.png"
+          />
           <FeatureGroup>
             <Marker position={position}>
               <Popup>
