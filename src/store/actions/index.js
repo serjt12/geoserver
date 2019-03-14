@@ -15,7 +15,6 @@ const actionTypes = {
   ADD_SITE_SUCCESS: 'ADD_SITE_SUCCESS',
   REQUEST_DELETE_SITE: 'REQUEST_DELETE_SITE',
   DELETE_SITE_SUCCESS: 'DELETE_SITE_SUCCESS',
-  // DELETE_SITE: 'DELETE_SITE',
 }
 
 export function showModal(msg) {

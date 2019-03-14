@@ -7,12 +7,13 @@ import '../../styles/drawer.css'
 const RenderProjectSites = ({projects: {projectSites}, dispatch, auth: {token},  projectID}) => {
   const handleDeleteSite = (siteId) => {
     dispatch({ type: 'REQUEST_DELETE_SITE', siteId, token})
+    message.success('Site successfully deleted!')
   }
   return projectSites ? projectSites.map(site => site.project_id === projectID &&
     <li key={site._id}>
       <Radio>{site.name}</Radio>
       <Popconfirm
-        title={`Are you sure delete ${site.name}?`}
+        title={`Are you sure to delete ${site.name}?`}
         onConfirm={() => handleDeleteSite(site._id)}
         onCancel={() => message.error('Canceled site operation')}
         okText="Yes"
@@ -158,7 +159,7 @@ const RenderWithProjects = (props) => {
         </Select>
         <Button onClick={handleShowModal} type="primary">New</Button>
         {
-          description === '' ? null : <p className="description-title" onClick={handleDescription}>Project Description</p>
+          description === '' ? null : <p className="description-title" onClick={handleDescription}>{!showDescription ? <Icon type="caret-right" /> : <Icon type="caret-down"/> }Project Description</p>
         }
         {
           showDescription ? <p className="description-content">{description}</p> : null
@@ -170,7 +171,7 @@ const RenderWithProjects = (props) => {
         />
       </div>
       <div className="box">
-        <strong onClick={handleShowSites}>{ !showSites ? <Icon className="fade-out" type="caret-right" /> : <Icon type="caret-down" />}Sites</strong>
+        <strong onClick={handleShowSites}>{ !showSites ? <Icon type="caret-right" /> : <Icon type="caret-down" />}Sites</strong>
         { showSites ?
           <Form>
             <Form.Item>
@@ -194,7 +195,7 @@ const RenderWithProjects = (props) => {
         }
       </div>
       <div className="box">
-        <strong onClick={handleShowLayers}>{ !showLayers ? <Icon className="fade-out" type="caret-right" /> : <Icon type="caret-down" />}Layers</strong>
+        <strong onClick={handleShowLayers}>{ !showLayers ? <Icon type="caret-right" /> : <Icon type="caret-down" />}Layers</strong>
         { showLayers &&
           <Dragger {...uploadConfig}>
             <p className="ant-upload-drag-icon">
@@ -206,7 +207,7 @@ const RenderWithProjects = (props) => {
       </div>
       <Divider />
       <div className="box">
-        <strong onClick={handleShowRGB}>{ !showRGB ? <Icon className="fade-out" type="caret-right" /> : <Icon type="caret-down" />}RGB Analysis</strong>
+        <strong onClick={handleShowRGB}>{ !showRGB ? <Icon type="caret-right" /> : <Icon type="caret-down" />}RGB Analysis</strong>
         { showRGB &&
           <Tabs defaultActiveKey="1" onChange={callbackRGB}>
             <TabPane tab="Detect Vegetation" key="1"><Button>Select ROI</Button></TabPane>
@@ -215,7 +216,7 @@ const RenderWithProjects = (props) => {
         }
       </div>
       <div className="box">
-        <strong onClick={handleShowSpatial}>{ !showSpatial ? <Icon className="fade-out" type="caret-right" /> : <Icon type="caret-down" />}Spatial Analysis</strong>
+        <strong onClick={handleShowSpatial}>{ !showSpatial ? <Icon type="caret-right" /> : <Icon type="caret-down" />}Spatial Analysis</strong>
         { showSpatial &&
           <Tabs defaultActiveKey="1" onChange={callbackSpatial}>
             <TabPane tab="Krigin" key="1">

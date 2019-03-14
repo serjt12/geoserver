@@ -1,14 +1,23 @@
 import React, { Component, Fragment } from 'react'
-import { Map, TileLayer, FeatureGroup  } from 'react-leaflet'
+import { Map, TileLayer, FeatureGroup, Marker, Popup, LayersControl  } from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw';
 import * as turf from '@turf/turf'
 import '../styles/map.css'
-
+const BaseLayer = LayersControl.BaseLayer
 export default class MapComponent extends Component {
   state = {
-    lat: 4.35,
-    lng: -72.04,
-    zoom: 5,
+    lat: 9.94346741544528,
+    // lat: 51.505,
+    // lng: -0.09,
+    lng: -83.74555260348282,
+    zoom: 18,
+  }
+  handleMapClicked = (e) => {
+    console.log(e)
+    this.setState({
+      lat: e.latlng.lat,
+      lng: e.latlng.lng
+    })
   }
   render() {
     const position = [this.state.lat, this.state.lng]
@@ -67,12 +76,27 @@ export default class MapComponent extends Component {
         <Map
           center={position}
           zoom={this.state.zoom}
+          onClick={this.handleMapClicked}
         >
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+        <LayersControl>
+           <BaseLayer checked name="OpenStreetMap">
+             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+           </BaseLayer>
+           <BaseLayer name="Carto Dark Matter">
+             <TileLayer url="http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"/>
+           </BaseLayer>
+           <BaseLayer name="Stamer tonner">
+             <TileLayer url="http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"/>
+           </BaseLayer>
+        </LayersControl>
           <FeatureGroup>
+            <Marker position={position}>
+              <Popup>
+                <span>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </span>
+              </Popup>
+            </Marker>
             <EditControl
               position='topright'
               onEdited={_onEdited}

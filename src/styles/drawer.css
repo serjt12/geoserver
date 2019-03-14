@@ -1,7 +1,7 @@
 .drawer-container {
   position: absolute;
   z-index: 401;
-  right: 56px;
+  right: 76px;
 }
 div .ant-drawer-content-wrapper {
   width: 25vw !important;
@@ -21,13 +21,19 @@ div .ant-drawer-content-wrapper {
 strong {
   cursor: pointer;
 }
+.ant-btn-primary:focus,
+.ant-btn-primary:hover {
+  background: #a6b068;
+}
 .ant-btn-primary {
   margin-top: 8px;
+  background: #A7BD0D;
+  border-color: #A7BD0D;
 }
 
 .description-title {
   font-size: 13px;
-  color: rgb(167, 175, 249);
+  color: #b4b98f;
   cursor: pointer;
 }
 .description-content {
