@@ -3,7 +3,7 @@ import { Map, TileLayer, FeatureGroup, Marker, Popup, LayersControl  } from 'rea
 import { EditControl } from 'react-leaflet-draw';
 import * as turf from '@turf/turf'
 import '../styles/map.css'
-const BaseLayer = LayersControl.BaseLayer
+const {BaseLayer, Overlay} = LayersControl
 export default class MapComponent extends Component {
   state = {
     lat: 9.94346741544528,
@@ -71,12 +71,14 @@ export default class MapComponent extends Component {
     //   console.log('DATA', geojsonData)
     //   onChange(geojsonData)
     // }
+    const bounds = [[9.941811040989872, -83.74462961356006], [9.945123789900686, -83.74647559340558]]
     return (
       <Fragment>
         <Map
           center={position}
           zoom={this.state.zoom}
           onClick={this.handleMapClicked}
+          maxBounds={bounds}
         >
         <LayersControl>
            <BaseLayer checked name="OpenStreetMap">
@@ -88,15 +90,16 @@ export default class MapComponent extends Component {
            <BaseLayer name="Stamer tonner">
              <TileLayer url="http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"/>
            </BaseLayer>
-        </LayersControl>
-          <TileLayer
-            tms={true}
-            opacity={1.0}
-            attribution=""
-            maxZoom={30}
-            minZoom={15}
-            url="http://181.143.87.202:5560/tiles/{z}/{x}/{y}.png"
-          />
+           <Overlay checked name="Layer">
+             <TileLayer
+               tms={true}
+               opacity={1.0}
+               attribution=""
+               maxZoom={30}
+               minZoom={15}
+               url="http://181.143.87.202:5560/tiles/{z}/{x}/{y}.png"
+               />
+           </Overlay>
           <FeatureGroup>
             <Marker position={position}>
               <Popup>
@@ -120,6 +123,7 @@ export default class MapComponent extends Component {
               }}
             />
           </FeatureGroup>
+        </LayersControl>
         </Map>
       </Fragment>
     )
