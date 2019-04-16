@@ -1,4 +1,4 @@
-import actionTypes from './'
+import actionTypes from '.'
 
 export function loginSuccess(user) {
   return {
@@ -7,7 +7,7 @@ export function loginSuccess(user) {
   }
 }
 export function fetchToken() {
-  const savedToken = localStorage.length > 0 && localStorage.getItem('token');
+  const savedToken = localStorage.length > 0 && localStorage.getItem('token')
   return {
     type: actionTypes.FETCH_TOKEN,
     savedToken

@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './components/App'
 
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 
-import reducers from './store/reducers'
 import createSagaMiddleware from 'redux-saga'
+import reducers from './store/reducers'
 
+import App from './components/App'
 import sagas from './store/sagas'
 
 const sagaMiddleware = createSagaMiddleware()

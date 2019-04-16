@@ -136,7 +136,7 @@ export function* requestDeleteSite({siteId, token}) {
   }
 }
 
-function * rootSaga () {
+function* rootSaga() {
   yield all([
     takeLatest(actionTypes.LOGIN_USER, loginRequestSaga),
     takeLatest(actionTypes.FETCH_TOKEN, alreadyLoginRequest),
