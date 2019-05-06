@@ -6,7 +6,6 @@ import { showModal } from '../store/actions'
 const Login = ({ form, errorMessage, dispatch }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { getFieldDecorator } = form
-  console.log(errorMessage)
   const handleSubmit = (e) => {
     e.preventDefault()
     form.validateFields((err, values) => {
@@ -79,7 +78,7 @@ const Login = ({ form, errorMessage, dispatch }) => {
         title="Please check your info"
         visible={errorMessage !== ''}
       >
-        <p>{errorMessage}</p>
+        <p>Error!</p>
       </Modal>
     </Form>
   )

@@ -7,12 +7,18 @@ import '../../styles/drawer.css'
 
 function DrawerComponent(props) {
   const [visible, setVisible] = useState(false);
-  const { projects: { userProjects }} = props
+  const { projects: { userProjects, projectSites, currentProjectID }} = props
   useEffect(() => {
-    const { dispatch, auth: {token}} = props
-    dispatch({ type: 'GET_PROJECTS', token})
-    dispatch({ type: 'GET_PROJECT_SITES', token})
-  }, [])
+  console.log('props: ', props);
+    const { dispatch, auth: {token} } = props
+    if (userProjects.length === 0) {
+      dispatch({ type: 'GET_PROJECTS', token})
+    }
+    if (projectSites.length === 0) {
+      dispatch({ type: 'GET_PROJECT_SITES', token, currentProjectID })
+    }
+
+  }, [currentProjectID])
   return (
     <div className="drawer-container">
       <Button type="primary" onClick={() => setVisible(true)}>

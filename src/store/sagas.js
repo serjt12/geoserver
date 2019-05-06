@@ -12,10 +12,10 @@ function* loginRequestSaga({user}) {
       email: user.Email,
       password: user.password,
     })
-    if (res.data.code === 200) {
-      const user = res.data
-      localStorage.setItem('token', user.token)
-      yield put(loginSuccess(user))
+    if (res.status === 200) {
+      const currentUser = res.data
+      localStorage.setItem('token', currentUser.token)
+      yield put(loginSuccess(currentUser))
     } else {
       const msg = res.data.message
       yield put(showModal(msg))
@@ -25,23 +25,25 @@ function* loginRequestSaga({user}) {
     }
   }
   catch (err) {
+    console.log('err: ', err);
     yield put(showModal(err))
   }
 }
 
 function* alreadyLoginRequest({savedToken}) {
   try {
-    const res = yield axios( baseURL + '/users/', {
+    const res = yield axios( baseURL + '/user/me', {
       headers: {
         Authorization: 'Bearer ' + savedToken,
       }
     })
-    if(savedToken) {
-      const user = res.data.users && { valid: true, token: savedToken, user_id: res.data.users[0]._id }
+    if (res.status === 200) {
+      const user = res.data.user && { valid: true, token: savedToken, user_id: res.data.user[0].id }
       yield put(loginSuccess(user))
     }
   }
   catch(err) {
+    console.log('err: ', err);
     yield put(showModal(err))
   }
 }
@@ -53,6 +55,8 @@ export function* requestUserProjects({token}) {
         Authorization: 'Bearer ' + token,
       }
     })
+    const projectId = res.data.projects && res.data.projects[0].id
+    yield put({ type: 'SET_PROJECTID', projectId })
     yield put(userProjectsSuccess(res.data.projects ? res.data.projects : []))
   }
   catch(err) {
@@ -60,9 +64,9 @@ export function* requestUserProjects({token}) {
   }
 };
 
-export function* requestAddProject({project, user_id, token}) {
+export function* requestAddProject({project, token}) {
   try {
-    const res = yield axios.post( baseURL + '/users/' + user_id + '/projects', {
+    const res = yield axios.post( baseURL + '/user/projects', {
       name: project.name,
       description: project.description,
     },
@@ -71,30 +75,34 @@ export function* requestAddProject({project, user_id, token}) {
         Authorization: 'Bearer ' + token,
       }
     })
-    yield put(addProjectSuccess(res.data.projects))
+    const projectId = res.data.projects[0].id
+    yield put(addProjectSuccess(res.data.projects[0]))
+    yield put({ type: 'SET_PROJECTID', projectId })
   }
   catch(err) {
     console.log(err)
   }
 }
 
-export function* requestDeleteProject({token, projectId}) {
+export function* requestDeleteProject({ token, projectId }) {
   try {
     const res = yield axios.delete( baseURL + '/projects/' + projectId, {
       headers: {
         Authorization: 'Bearer ' + token,
       }
     })
-    yield put(deleteProjectSuccess(res.data.projects[0]._id))
+    yield put(deleteProjectSuccess(res.data.projects[0].id))
   }
   catch(err) {
     console.log(err)
   }
 }
 
-export function* requestProjectSites({token}) {
+export function* requestProjectSites({token, currentProjectID }) {
+  const projectID = currentProjectID
+  console.log('projectID: ', projectID);
   try {
-    const res = yield axios( baseURL + '/sites/', {
+    const res = yield axios( baseURL + '/projects/' + projectID + '/sites', {
       headers: {
         Authorization: 'Bearer ' + token,
       }

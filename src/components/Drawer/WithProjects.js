@@ -5,22 +5,26 @@ import ModalForm from './ModalForm'
 import '../../styles/drawer.css'
 
 const RenderProjectSites = ({projects: {projectSites}, dispatch, auth: {token},  projectID}) => {
+  console.log('projectID: ', projectID);
+  console.log('projectSites: ', projectSites);
   const handleDeleteSite = (siteId) => {
-    dispatch({ type: 'REQUEST_DELETE_SITE', siteId, token})
+    dispatch({ type: 'REQUEST_DELETE_SITE', siteId, token })
     message.success('Site successfully deleted!')
   }
   return projectSites ? projectSites.map(site => site.project_id === projectID &&
-    <li key={site._id}>
-      <Radio>{site.name}</Radio>
-      <Popconfirm
-        title={`Are you sure to delete ${site.name}?`}
-        onConfirm={() => handleDeleteSite(site._id)}
-        onCancel={() => message.error('Canceled site operation')}
-        okText="Yes"
-        cancelText="No">
-        <Icon type="close" />
-      </Popconfirm>
-    </li>) : null
+    (
+      <li key={site.id}>
+        <Radio>{site.name}</Radio>
+        <Popconfirm
+          title={`Are you sure to delete ${site.name}?`}
+          onConfirm={() => handleDeleteSite(site.id)}
+          onCancel={() => message.error('Canceled site operation')}
+          okText="Yes"
+          cancelText="No">
+          <Icon type="close" />
+        </Popconfirm>
+      </li>
+    )) : null
 }
 const KriginForm = () => {
   return <p>KRIGIN</p>
@@ -32,18 +36,19 @@ const Option = Select.Option
 const Dragger = Upload.Dragger
 const TabPane = Tabs.TabPane
 const RenderWithProjects = (props) => {
+  console.log('props: ', props);
+  const { auth: { token }, dispatch, projects: { currentProjectID } } = props
   const [showSites, setShowSites] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [showLayers, setShowLayers] = useState(false)
   const [showRGB, setShowRGB] = useState(false)
   const [showSpatial, setShowSpatial] = useState(false)
-  const [projectID, setProjectID] = useState(props.projects.userProjects[props.projects.userProjects.length - 1]._id)
   const [defaultProject, setDefaultProject] = useState(props.projects.userProjects[props.projects.userProjects.length - 1].name)
   const [showDescription, setShowDescription] = useState(false)
   const getFieldDecorator = props.form.getFieldDecorator
   const sitesBtnDisabled = props.form.getFieldValue('siteName')
   const {userProjects} = props.projects
-  const description = props.projects.userProjects.filter(project =>  project._id === projectID)[0] !== undefined ? props.projects.userProjects.filter(project =>  project._id === projectID)[0].description : ''
+  const description = props.projects.userProjects.filter(project =>  project.id === currentProjectID)[0] !== undefined ? props.projects.userProjects.filter(project =>  project.id === currentProjectID)[0].description : ''
   const uploadConfig = {
     name: 'file',
     multiple: true,
@@ -61,19 +66,20 @@ const RenderWithProjects = (props) => {
     },
   };
   useEffect(() => {
-    const { userProjects } = props.projects
-    let projectIndex = userProjects.findIndex(project => projectID === project._id)
+    let projectIndex = userProjects.findIndex(project => currentProjectID === project.id)
     const projectsLength = userProjects.length
-
-    if(projectIndex === -1) {
+    const a = userProjects[projectIndex].id
+    const b = userProjects[projectsLength - 1].id
+    if (projectIndex === -1) {
       projectIndex = projectsLength - 1
-      setProjectID(userProjects[projectIndex]._id)
+      // dispatch({ type: 'SET_PROJECTID', a })
       setDefaultProject(userProjects[projectIndex].name)
     } else {
-      setProjectID(userProjects[projectsLength - 1]._id)
+      // dispatch(setProjectID(userProjects[projectsLength - 1].id))
+      // dispatch({ type: 'SET_PROJECTID', b })
       setDefaultProject(userProjects[projectsLength - 1].name)
     }
-  }, [props.projects.userProjects.length])
+  }, [userProjects.length])
   const handleShowSites = () => {
     setShowSites(!showSites)
   }
@@ -87,7 +93,7 @@ const RenderWithProjects = (props) => {
     setShowSpatial(!showSpatial)
   }
   const projectChange = (value) => {
-    setProjectID(value)
+    dispatch({ type: 'SET_PROJECTID', projectId: value })
   }
   const handleDelete = (projectId) => {
     const { dispatch, auth: {token} } = props
@@ -122,7 +128,7 @@ const RenderWithProjects = (props) => {
         return;
       }
       form.resetFields();
-      dispatch({ type: 'REQUEST_ADD_SITE', site, projectID, token})
+      dispatch({ type: 'REQUEST_ADD_SITE', site, token })
       message.success(`${site.siteName} Created Successfully!`)
     })
   }
@@ -145,17 +151,19 @@ const RenderWithProjects = (props) => {
           onChange={projectChange}
           size={'large'}
         >
-          {userProjects.map(project => <Option key={project._id}>{project.name}
-            <Popconfirm
-              title={`Are you sure to delete ${project.name}?`}
-              onConfirm={() => handleDelete(project._id)}
-              onCancel={() => message.error('Canceled project operation')}
-              okText="Yes"
-              cancelText="No">
-              <span className="close"><Icon type="close" /></span>
-            </Popconfirm>
-          </Option>)
-            .reverse()}
+          {userProjects.map(project => (
+            <Option key={project.id}>
+              {project.name}
+              <Popconfirm
+                title={`Are you sure to delete ${project.name}?`}
+                onConfirm={() => handleDelete(project.id)}
+                onCancel={() => message.error('Canceled project operation')}
+                okText="Yes"
+                cancelText="No">
+                <span className="close"><Icon type="close" /></span>
+              </Popconfirm>
+            </Option>
+          )).reverse()}
         </Select>
         <Button onClick={handleShowModal} type="primary">New</Button>
         {
@@ -173,25 +181,27 @@ const RenderWithProjects = (props) => {
       <div className="box">
         <strong onClick={handleShowSites}>{ !showSites ? <Icon type="caret-right" /> : <Icon type="caret-down" />}Sites</strong>
         { showSites ?
-          <Form>
-            <Form.Item>
-              <Row gutter={0}>
-                <ul>
-                  <RenderProjectSites {...props} projectID={projectID}/>
-                </ul>
-                <Col span={12}>
-                  {getFieldDecorator('siteName', {
-                    rules: [{ required: true, message: 'Add a site' }],
-                  })(
-                    <Input />
-                  )}
-                </Col>
-                <Col span={12}>
-                  <Button disabled={!sitesBtnDisabled} onClick={handleAddSite}>Add Site</Button>
-                </Col>
-              </Row>
-            </Form.Item>
-          </Form> : null
+          (
+            <Form>
+              <Form.Item>
+                <Row gutter={0}>
+                  <ul>
+                    <RenderProjectSites {...props} projectID={currentProjectID} />
+                  </ul>
+                  <Col span={12}>
+                    {getFieldDecorator('siteName', {
+                      rules: [{ required: true, message: 'Add a site' }],
+                    })(
+                      <Input />
+                    )}
+                  </Col>
+                  <Col span={12}>
+                    <Button disabled={!sitesBtnDisabled} onClick={handleAddSite}>Add Site</Button>
+                  </Col>
+                </Row>
+              </Form.Item>
+            </Form>
+          ) : null
         }
       </div>
       <div className="box">

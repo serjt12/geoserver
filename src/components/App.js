@@ -8,21 +8,28 @@ import MapComponent from './Map'
 
 const App = (props) => {
   useEffect(() => {
-    props.dispatch(fetchToken())
-  });
+    const savedToken = localStorage.length > 0 ? localStorage.getItem('token') : ''
+    if (savedToken !== '') {
+      props.dispatch(fetchToken(savedToken))
+    }
+  })
   return (
     <div className="app-container">
-      {!props.valid ?
-      <div className='login-wrap'>
-        <Login />
-      </div>
-      :
-      <Fragment>
-        <Drawer />
-        <div className='map-container'>
-          <MapComponent />
-        </div>
-      </Fragment>
+      {
+        !props.valid 
+          ? (
+            <div className="login-wrap">
+              <Login />
+            </div>
+          )
+          : (
+            <Fragment>
+              <Drawer />
+              <div className="map-container">
+                <MapComponent />
+              </div>
+            </Fragment>
+          )
     }
     </div>
   )

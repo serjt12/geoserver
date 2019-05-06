@@ -6,8 +6,7 @@ export function loginSuccess(user) {
     user
   }
 }
-export function fetchToken() {
-  const savedToken = localStorage.length > 0 && localStorage.getItem('token')
+export function fetchToken(savedToken) {
   return {
     type: actionTypes.FETCH_TOKEN,
     savedToken
