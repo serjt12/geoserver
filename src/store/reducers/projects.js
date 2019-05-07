@@ -29,7 +29,8 @@ function Projects (state = InitialState, action) {
       var { deletedProjectId } = action;
       return {
         ...state,
-        userProjects: state.userProjects.filter(project => project._id !== deletedProjectId)
+        userProjects: state.userProjects.filter(project => project.id !== deletedProjectId),
+        currentProjectID: state.userProjects[state.userProjects.length - 1].id
       }
     case actionTypes.PROJECT_SITES_SUCCESS:
       var { sites } = action
@@ -41,7 +42,7 @@ function Projects (state = InitialState, action) {
       var { newSite } = action
       return {
         ...state,
-        projectSites: [ ...state.projectSites, newSite]
+        projectSites: [ ...state.projectSites, newSite[0]]
       }
     case actionTypes.DELETE_SITE_SUCCESS:
       var { deletedSiteId } = action

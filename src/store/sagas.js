@@ -91,6 +91,7 @@ export function* requestDeleteProject({ token, projectId }) {
         Authorization: 'Bearer ' + token,
       }
     })
+    console.log('res.data.projects[0].id: ', res.data.projects[0]);
     yield put(deleteProjectSuccess(res.data.projects[0].id))
   }
   catch(err) {
@@ -100,7 +101,6 @@ export function* requestDeleteProject({ token, projectId }) {
 
 export function* requestProjectSites({token, currentProjectID }) {
   const projectID = currentProjectID
-  console.log('projectID: ', projectID);
   try {
     const res = yield axios( baseURL + '/projects/' + projectID + '/sites', {
       headers: {
@@ -114,7 +114,8 @@ export function* requestProjectSites({token, currentProjectID }) {
   }
 }
 
-export function* requestAddSite({site, projectID, token}) {
+export function* requestAddSite({site, currentProjectID, token}) {
+  const projectID = currentProjectID
   try {
     const res = yield axios.post( baseURL + '/projects/' + projectID + '/sites/', { name: site.siteName, project_id: projectID },
       {

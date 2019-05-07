@@ -5,8 +5,6 @@ import ModalForm from './ModalForm'
 import '../../styles/drawer.css'
 
 const RenderProjectSites = ({projects: {projectSites}, dispatch, auth: {token},  projectID}) => {
-  console.log('projectID: ', projectID);
-  console.log('projectSites: ', projectSites);
   const handleDeleteSite = (siteId) => {
     dispatch({ type: 'REQUEST_DELETE_SITE', siteId, token })
     message.success('Site successfully deleted!')
@@ -36,19 +34,21 @@ const Option = Select.Option
 const Dragger = Upload.Dragger
 const TabPane = Tabs.TabPane
 const RenderWithProjects = (props) => {
-  console.log('props: ', props);
+  // console.log('props: ', props);
   const { auth: { token }, dispatch, projects: { currentProjectID } } = props
   const [showSites, setShowSites] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [showLayers, setShowLayers] = useState(false)
   const [showRGB, setShowRGB] = useState(false)
   const [showSpatial, setShowSpatial] = useState(false)
-  const [defaultProject, setDefaultProject] = useState(props.projects.userProjects[props.projects.userProjects.length - 1].name)
+  const [defaultProject, setDefaultProject] = useState(props.projects.userProjects.filter(project => project.id === currentProjectID)[0] !== undefined ? props.projects.userProjects.filter(project => project.id === currentProjectID)[0].name : '')
+  // console.log('defaultProject: ', defaultProject);
   const [showDescription, setShowDescription] = useState(false)
   const getFieldDecorator = props.form.getFieldDecorator
   const sitesBtnDisabled = props.form.getFieldValue('siteName')
-  const {userProjects} = props.projects
+  const { userProjects } = props.projects
   const description = props.projects.userProjects.filter(project =>  project.id === currentProjectID)[0] !== undefined ? props.projects.userProjects.filter(project =>  project.id === currentProjectID)[0].description : ''
+  // const projectsLength = userProjects.length
   const uploadConfig = {
     name: 'file',
     multiple: true,
@@ -65,21 +65,7 @@ const RenderWithProjects = (props) => {
       }
     },
   };
-  useEffect(() => {
-    let projectIndex = userProjects.findIndex(project => currentProjectID === project.id)
-    const projectsLength = userProjects.length
-    const a = userProjects[projectIndex].id
-    const b = userProjects[projectsLength - 1].id
-    if (projectIndex === -1) {
-      projectIndex = projectsLength - 1
-      // dispatch({ type: 'SET_PROJECTID', a })
-      setDefaultProject(userProjects[projectIndex].name)
-    } else {
-      // dispatch(setProjectID(userProjects[projectsLength - 1].id))
-      // dispatch({ type: 'SET_PROJECTID', b })
-      setDefaultProject(userProjects[projectsLength - 1].name)
-    }
-  }, [userProjects.length])
+  
   const handleShowSites = () => {
     setShowSites(!showSites)
   }
@@ -122,13 +108,13 @@ const RenderWithProjects = (props) => {
     });
   }
   const handleAddSite = () => {
-    const {form, dispatch, auth: {token}} = props
+    const {form, dispatch, auth: {token}, projects: { currentProjectID }} = props
     form.validateFields((err, site) => {
       if (err) {
         return;
       }
       form.resetFields();
-      dispatch({ type: 'REQUEST_ADD_SITE', site, token })
+      dispatch({ type: 'REQUEST_ADD_SITE', site, currentProjectID, token })
       message.success(`${site.siteName} Created Successfully!`)
     })
   }

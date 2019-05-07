@@ -9,12 +9,12 @@ function DrawerComponent(props) {
   const [visible, setVisible] = useState(false);
   const { projects: { userProjects, projectSites, currentProjectID }} = props
   useEffect(() => {
-  console.log('props: ', props);
+  // console.log('props: ', props);
     const { dispatch, auth: {token} } = props
     if (userProjects.length === 0) {
       dispatch({ type: 'GET_PROJECTS', token})
     }
-    if (projectSites.length === 0) {
+    if (projectSites.length === 0 || projectSites[0].id !== currentProjectID) {
       dispatch({ type: 'GET_PROJECT_SITES', token, currentProjectID })
     }
 
