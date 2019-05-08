@@ -25,7 +25,7 @@ function DrawerComponent(props) {
         Open
       </Button>
       <Drawer
-        width={'25vw'}
+        width="25vw"
         title="Geoserver"
         placement="left"
         closable={false}

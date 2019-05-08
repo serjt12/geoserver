@@ -100,17 +100,19 @@ export function* requestDeleteProject({ token, projectId }) {
 }
 
 export function* requestProjectSites({token, currentProjectID }) {
-  const projectID = currentProjectID
-  try {
-    const res = yield axios( baseURL + '/projects/' + projectID + '/sites', {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      }
-    })
-    yield put(projectSitesSuccess(res.data.sites ? res.data.sites : []))
-  }
-  catch(err) {
-    console.log(err)
+  const projectID = currentProjectID 
+  if (projectID !== '') {
+    try {
+      const res = yield axios( baseURL + '/projects/' + projectID + '/sites', {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        }
+      })
+      yield put(projectSitesSuccess(res.data.sites ? res.data.sites : []))
+    }
+    catch(err) {
+      console.log(err)
+    }
   }
 }
 
@@ -138,7 +140,7 @@ export function* requestDeleteSite({siteId, token}) {
           Authorization: 'Bearer ' + token,
         }
       })
-    yield put(deleteSiteSuccess(res.data.sites[0]._id))
+    yield put(deleteSiteSuccess(res.data.sites[0].id))
   }
   catch(err) {
     console.log(err)

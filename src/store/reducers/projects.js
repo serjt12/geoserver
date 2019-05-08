@@ -48,7 +48,7 @@ function Projects (state = InitialState, action) {
       var { deletedSiteId } = action
       return {
         ...state,
-        projectSites: state.projectSites.filter(site => site._id !== deletedSiteId)
+        projectSites: state.projectSites.filter(site => site.id !== deletedSiteId)
       }
     default:
       return state
