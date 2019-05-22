@@ -43,6 +43,26 @@ strong {
 }
 
 /* WithProjects */
+
+@media (min-width: 768px) {
+  .sites-input {
+    display: flex;
+    flex-direction: row;
+  }
+  .sites-input input {
+    margin-right: 5px;
+  }
+  .sites-input button {
+    margin-top: 5px;
+    width: 100%;
+  }
+}
+.sites-input button {
+  width: 100%;
+}
+.sites-input input {
+  height: 40px;
+}
 .close {
   color: red;
   float: right;
@@ -50,3 +70,4 @@ strong {
 .ant-select-selection-selected-value .close {
   display: none
 }
+

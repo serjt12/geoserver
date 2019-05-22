@@ -170,21 +170,17 @@ const RenderWithProjects = (props) => {
           (
             <Form>
               <Form.Item>
-                <Row gutter={0}>
-                  <ul>
-                    <RenderProjectSites {...props} projectID={currentProjectID} />
-                  </ul>
-                  <Col span={12}>
-                    {getFieldDecorator('siteName', {
-                      rules: [{ required: true, message: 'Add a site' }],
-                    })(
-                      <Input />
-                    )}
-                  </Col>
-                  <Col span={12}>
-                    <Button disabled={!sitesBtnDisabled} onClick={handleAddSite}>Add Site</Button>
-                  </Col>
-                </Row>
+                <ul>
+                  <RenderProjectSites {...props} projectID={currentProjectID} />
+                </ul>
+                <div className="sites-input">
+                  {getFieldDecorator('siteName', {
+                    rules: [{ required: true, message: 'Add a site' }],
+                  })(
+                    <Input />
+                  )}
+                  <Button type="primary" disabled={!sitesBtnDisabled} onClick={handleAddSite}>Add Site</Button>
+                </div>
               </Form.Item>
             </Form>
           ) : null
